@@ -2,23 +2,18 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>关于 | 荔枝气泡</title>
+<title>在VPS上搭建ShadowsocksR代理使用 | 荔枝气泡</title>
 <link rel="shortcut icon" href="https://nazocthun.github.io/favicon.ico?v=1622088084015">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://nazocthun.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="关于 | 荔枝气泡 - Atom Feed" href="https://nazocthun.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="在VPS上搭建ShadowsocksR代理使用 | 荔枝气泡 - Atom Feed" href="https://nazocthun.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
-
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
-..." />
+    <meta name="description" content="SSR全称shadowsocks-R。SSR相对于SS改进了混淆和协议，更难被防火墙检测到。简单地说，SSR是SS的改进版。
+1. 准备工作
+SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，网速还算快，延迟已经做到最好了，赶上优..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -81,39 +76,81 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              关于
+              在VPS上搭建ShadowsocksR代理使用
             </h2>
             <div class="post-info">
               <span>
-                2019-01-25
+                2018-11-12
               </span>
               <span>
-                1 min read
+                2 min read
               </span>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
-</blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+                <p>SSR全称shadowsocks-R。SSR相对于SS改进了混淆和协议，更难被防火墙检测到。简单地说，SSR是SS的改进版。</p>
+<h1 id="1-准备工作">1. 准备工作</h1>
+<p>SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，网速还算快，延迟已经做到最好了，赶上优惠价格也很低，性价比很高。</p>
+<h1 id="2-一键安装">2. 一键安装</h1>
+<p>拿到手VPS服务器，推荐安装Cent OS 7 64位系统，通过SSH连接，用下面的安装脚本：</p>
+<pre><code class="language-bash">wget --no-check-certificate https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocksR.sh
+chmod +x shadowsocksR.sh
+./shadowsocksR.sh 2&gt;&amp;1 | tee shadowsocksR.log
+</code></pre>
+<p>密码、端口、协议、混淆等根据自身需求设置。</p>
+<p>安装完成后即已后台启动 ShadowsocksR ，运行：</p>
+<pre><code class="language-bash">/etc/init.d/shadowsocks status
+</code></pre>
+<p>可以查看 ShadowsocksR 进程是否已经启动。<br>
+本脚本安装完成后，已将 ShadowsocksR 自动加入开机自启动。</p>
+<h1 id="3-常用命令">3. 常用命令</h1>
+<pre><code class="language-bash">/etc/init.d/shadowsocks start  # 启动
+/etc/init.d/shadowsocks stop # 停止
+/etc/init.d/shadowsocks restart # 重启
+/etc/init.d/shadowsocks status # 状态
+
+/etc/shadowsocks.json # 配置文件路径
+/var/log/shadowsocks.log # 日志文件路径
+/usr/local/shadowsocks # 代码安装目录
+</code></pre>
+<h1 id="4-多用户配置示例">4. 多用户配置示例</h1>
+<pre><code class="language-json">{
+    &quot;server&quot;:&quot;0.0.0.0&quot;,
+    &quot;server_ipv6&quot;: &quot;[::]&quot;,
+    &quot;local_address&quot;:&quot;127.0.0.1&quot;,
+    &quot;local_port&quot;:1080,
+    &quot;port_password&quot;:{
+        &quot;8989&quot;:&quot;password1&quot;,
+        &quot;8990&quot;:&quot;password2&quot;,
+        &quot;8991&quot;:&quot;password3&quot;
+    },
+    &quot;timeout&quot;:300,
+    &quot;method&quot;:&quot;aes-256-cfb&quot;,
+    &quot;protocol&quot;: &quot;origin&quot;,
+    &quot;protocol_param&quot;: &quot;&quot;,
+    &quot;obfs&quot;: &quot;plain&quot;,
+    &quot;obfs_param&quot;: &quot;&quot;,
+    &quot;redirect&quot;: &quot;&quot;,
+    &quot;dns_ipv6&quot;: false,
+    &quot;fast_open&quot;: false,
+    &quot;workers&quot;: 1
+}
+</code></pre>
+<h1 id="5-卸载">5. 卸载</h1>
+<p>使用 root 用户登录，运行以下命令：</p>
+<pre><code class="language-bash">./shadowsocksR.sh uninstall
+</code></pre>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
-</ul>
-</li>
+<li><a href="#1-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">1. 准备工作</a></li>
+<li><a href="#2-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85">2. 一键安装</a></li>
+<li><a href="#3-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">3. 常用命令</a></li>
+<li><a href="#4-%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B">4. 多用户配置示例</a></li>
+<li><a href="#5-%E5%8D%B8%E8%BD%BD">5. 卸载</a></li>
 </ul>
 
               </div>

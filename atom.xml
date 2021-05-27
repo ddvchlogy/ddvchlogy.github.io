@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://nazocthun.github.io</id>
     <title>Gridea</title>
-    <updated>2021-05-27T03:46:46.674Z</updated>
+    <updated>2021-05-27T03:52:01.605Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://nazocthun.github.io"/>
     <link rel="self" href="https://nazocthun.github.io/atom.xml"/>
@@ -10,19 +10,6 @@
     <logo>https://nazocthun.github.io/images/avatar.png</logo>
     <icon>https://nazocthun.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Gridea</rights>
-    <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://nazocthun.github.io/post/hello-gridea/</id>
-        <link href="https://nazocthun.github.io/post/hello-gridea/">
-        </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></content>
-    </entry>
     <entry>
         <title type="html"><![CDATA[在VPS上搭建ShadowsocksR代理使用]]></title>
         <id>https://nazocthun.github.io/post/zai-vps-shang-da-jian-shadowsocksr-dai-li-shi-yong/</id>

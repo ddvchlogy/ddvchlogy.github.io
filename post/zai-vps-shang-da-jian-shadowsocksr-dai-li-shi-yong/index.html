@@ -2,24 +2,19 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hello Gridea | Gridea</title>
+<title>在VPS上搭建ShadowsocksR代理使用 | Gridea</title>
 <link rel="shortcut icon" href="https://nazocthun.github.io/favicon.ico?v=1622086894292">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://nazocthun.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Hello Gridea | Gridea - Atom Feed" href="https://nazocthun.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="在VPS上搭建ShadowsocksR代理使用 | Gridea - Atom Feed" href="https://nazocthun.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="👏  欢迎使用 Gridea ！
-✍️  Gridea 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...
-
-Github
-Gridea 主页
-示例网站
-特性👇
-📝  你可以使用最酷的 Markdo..." />
-    <meta name="keywords" content="Gridea" />
+    <meta name="description" content="SSR全称shadowsocks-R。SSR相对于SS改进了混淆和协议，更难被防火墙检测到。简单地说，SSR是SS的改进版。
+1. 准备工作
+SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，网速还算快，延迟已经做到最好了，赶上优..." />
+    <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -81,56 +76,81 @@ Gridea 主页
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              Hello Gridea
+              在VPS上搭建ShadowsocksR代理使用
             </h2>
             <div class="post-info">
               <span>
-                2018-12-12
+                2018-11-12
               </span>
               <span>
                 2 min read
               </span>
               
-                <a href="https://nazocthun.github.io/tag/RL2HR0rB6/" class="post-tag">
-                  # Gridea
-                </a>
-              
             </div>
-            
-              <img class="post-feature-image" src="https://nazocthun.github.io/post-images/hello-gridea.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+                <p>SSR全称shadowsocks-R。SSR相对于SS改进了混淆和协议，更难被防火墙检测到。简单地说，SSR是SS的改进版。</p>
+<h1 id="1-准备工作">1. 准备工作</h1>
+<p>SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，网速还算快，延迟已经做到最好了，赶上优惠价格也很低，性价比很高。</p>
+<h1 id="2-一键安装">2. 一键安装</h1>
+<p>拿到手VPS服务器，推荐安装Cent OS 7 64位系统，通过SSH连接，用下面的安装脚本：</p>
+<pre><code class="language-bash">wget --no-check-certificate https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocksR.sh
+chmod +x shadowsocksR.sh
+./shadowsocksR.sh 2&gt;&amp;1 | tee shadowsocksR.log
+</code></pre>
+<p>密码、端口、协议、混淆等根据自身需求设置。</p>
+<p>安装完成后即已后台启动 ShadowsocksR ，运行：</p>
+<pre><code class="language-bash">/etc/init.d/shadowsocks status
+</code></pre>
+<p>可以查看 ShadowsocksR 进程是否已经启动。<br>
+本脚本安装完成后，已将 ShadowsocksR 自动加入开机自启动。</p>
+<h1 id="3-常用命令">3. 常用命令</h1>
+<pre><code class="language-bash">/etc/init.d/shadowsocks start  # 启动
+/etc/init.d/shadowsocks stop # 停止
+/etc/init.d/shadowsocks restart # 重启
+/etc/init.d/shadowsocks status # 状态
+
+/etc/shadowsocks.json # 配置文件路径
+/var/log/shadowsocks.log # 日志文件路径
+/usr/local/shadowsocks # 代码安装目录
+</code></pre>
+<h1 id="4-多用户配置示例">4. 多用户配置示例</h1>
+<pre><code class="language-json">{
+    &quot;server&quot;:&quot;0.0.0.0&quot;,
+    &quot;server_ipv6&quot;: &quot;[::]&quot;,
+    &quot;local_address&quot;:&quot;127.0.0.1&quot;,
+    &quot;local_port&quot;:1080,
+    &quot;port_password&quot;:{
+        &quot;8989&quot;:&quot;password1&quot;,
+        &quot;8990&quot;:&quot;password2&quot;,
+        &quot;8991&quot;:&quot;password3&quot;
+    },
+    &quot;timeout&quot;:300,
+    &quot;method&quot;:&quot;aes-256-cfb&quot;,
+    &quot;protocol&quot;: &quot;origin&quot;,
+    &quot;protocol_param&quot;: &quot;&quot;,
+    &quot;obfs&quot;: &quot;plain&quot;,
+    &quot;obfs_param&quot;: &quot;&quot;,
+    &quot;redirect&quot;: &quot;&quot;,
+    &quot;dns_ipv6&quot;: false,
+    &quot;fast_open&quot;: false,
+    &quot;workers&quot;: 1
+}
+</code></pre>
+<h1 id="5-卸载">5. 卸载</h1>
+<p>使用 root 用户登录，运行以下命令：</p>
+<pre><code class="language-bash">./shadowsocksR.sh uninstall
+</code></pre>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E7%89%B9%E6%80%A7">特性👇</a></li>
-</ul>
-</li>
+<li><a href="#1-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">1. 准备工作</a></li>
+<li><a href="#2-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85">2. 一键安装</a></li>
+<li><a href="#3-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">3. 常用命令</a></li>
+<li><a href="#4-%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B">4. 多用户配置示例</a></li>
+<li><a href="#5-%E5%8D%B8%E8%BD%BD">5. 卸载</a></li>
 </ul>
 
               </div>
@@ -138,15 +158,6 @@ Gridea 主页
           </article>
         </div>
 
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://nazocthun.github.io/post/zai-vps-shang-da-jian-shadowsocksr-dai-li-shi-yong/">
-              <h3 class="post-title">
-                在VPS上搭建ShadowsocksR代理使用
-              </h3>
-            </a>
-          </div>
         
 
         

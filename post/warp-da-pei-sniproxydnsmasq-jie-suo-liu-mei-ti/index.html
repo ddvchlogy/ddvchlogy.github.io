@@ -2,18 +2,17 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>在VPS上搭建ShadowsocksR代理使用 | 荔枝气泡</title>
+<title>Cloudflare WARP 搭配 SNIProxy+DNSmasq 解锁 Netflix 等流媒体 | 荔枝气泡</title>
 <link rel="shortcut icon" href="https://nazocthun.github.io/favicon.ico?v=1622208359652">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://nazocthun.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="在VPS上搭建ShadowsocksR代理使用 | 荔枝气泡 - Atom Feed" href="https://nazocthun.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="Cloudflare WARP 搭配 SNIProxy+DNSmasq 解锁 Netflix 等流媒体 | 荔枝气泡 - Atom Feed" href="https://nazocthun.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="SSR全称shadowsocks-R，SSR相对于SS改进了混淆和协议，更难被防火墙检测到。简单地说，SSR是SS的改进版。
-1. 准备工作
-SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，网速还算快，延迟已经做到最好了，赶上优..." />
+    <meta name="description" content="Netflix是什么？
+Netflix是一家优质的视频服务商，与国内腾讯视频、爱奇艺类似。但与之不同的是，Netflix并无免费内容，所有在Netflix上的电影、剧集等，都需要付费购买会员才可以观看。并且Netflix自制剧（类似爱奇艺自..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -80,11 +79,11 @@ SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，�
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              在VPS上搭建ShadowsocksR代理使用
+              Cloudflare WARP 搭配 SNIProxy+DNSmasq 解锁 Netflix 等流媒体
             </h2>
             <div class="post-info">
               <span>
-                2018-11-12
+                2021-05-28
               </span>
               <span>
                 2 min read
@@ -94,67 +93,32 @@ SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，�
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>SSR全称shadowsocks-R，SSR相对于SS改进了混淆和协议，更难被防火墙检测到。简单地说，SSR是SS的改进版。</p>
-<h1 id="1-准备工作">1. 准备工作</h1>
-<p>SSR服务端是搭建在VPS虚拟服务器上，这里推荐一下搬瓦工，网速还算快，延迟已经做到最好了，赶上优惠价格也很低，性价比很高。</p>
-<h1 id="2-一键安装">2. 一键安装</h1>
-<p>拿到手VPS服务器，推荐安装Cent OS 7 64位系统，通过SSH连接，用下面的安装脚本：</p>
-<pre><code class="language-bash">wget --no-check-certificate https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocksR.sh
-chmod +x shadowsocksR.sh
-./shadowsocksR.sh 2&gt;&amp;1 | tee shadowsocksR.log
+                <h1 id="netflix是什么">Netflix是什么？</h1>
+<p>Netflix是一家优质的视频服务商，与国内腾讯视频、爱奇艺类似。但与之不同的是，Netflix并无免费内容，所有在Netflix上的电影、剧集等，都需要付费购买会员才可以观看。并且Netflix自制剧（类似爱奇艺自制的网剧）几乎都是神剧，评分爆炸。目前越来越多的用户开始接触并选择观看Netflix。更多内容可以移步我的<a href="asd">另一篇博文</a></p>
+<p>安装</p>
+<pre><code class="language-bash">wget --no-check-certificate -O dnsmasq\_sniproxy.sh https://raw.githubusercontent.com/myxuchangbin/dnsmasq\_sniproxy\_install/master/dnsmasq\_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -i
 </code></pre>
-<p>密码、端口、协议、混淆等根据自身需求设置。</p>
-<p>安装完成后即已后台启动 ShadowsocksR ，运行：</p>
-<pre><code class="language-bash">/etc/init.d/shadowsocks status
+<p>卸载</p>
+<pre><code class="language-bash">wget --no-check-certificate -O dnsmasq\_sniproxy.sh https://raw.githubusercontent.com/myxuchangbin/dnsmasq\_sniproxy\_install/master/dnsmasq\_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -u
 </code></pre>
-<p>可以查看 ShadowsocksR 进程是否已经启动。<br>
-本脚本安装完成后，已将 ShadowsocksR 自动加入开机自启动。</p>
-<h1 id="3-常用命令">3. 常用命令</h1>
-<pre><code class="language-bash">/etc/init.d/shadowsocks start  # 启动
-/etc/init.d/shadowsocks stop # 停止
-/etc/init.d/shadowsocks restart # 重启
-/etc/init.d/shadowsocks status # 状态
-
-/etc/shadowsocks.json # 配置文件路径
-/var/log/shadowsocks.log # 日志文件路径
-/usr/local/shadowsocks # 代码安装目录
+<p>添加ip</p>
+<pre><code class="language-bash">echo nameserver IP &gt; /etc/resolv.conf
 </code></pre>
-<h1 id="4-多用户配置示例">4. 多用户配置示例</h1>
-<pre><code class="language-json">{
-    &quot;server&quot;:&quot;0.0.0.0&quot;,
-    &quot;server_ipv6&quot;: &quot;[::]&quot;,
-    &quot;local_address&quot;:&quot;127.0.0.1&quot;,
-    &quot;local_port&quot;:1080,
-    &quot;port_password&quot;:{
-        &quot;8989&quot;:&quot;password1&quot;,
-        &quot;8990&quot;:&quot;password2&quot;,
-        &quot;8991&quot;:&quot;password3&quot;
-    },
-    &quot;timeout&quot;:300,
-    &quot;method&quot;:&quot;aes-256-cfb&quot;,
-    &quot;protocol&quot;: &quot;origin&quot;,
-    &quot;protocol_param&quot;: &quot;&quot;,
-    &quot;obfs&quot;: &quot;plain&quot;,
-    &quot;obfs_param&quot;: &quot;&quot;,
-    &quot;redirect&quot;: &quot;&quot;,
-    &quot;dns_ipv6&quot;: false,
-    &quot;fast_open&quot;: false,
-    &quot;workers&quot;: 1
-}
+<p>限制ip使用<br>
+此方法不同Netflix-proxy，可以登录网页手动绑定ip，如果你搭建Netflix解锁服务的vps的ip被别人知道，他们也可以不经过你的同意直接使用，所以限制ip是很有必要的。</p>
+<p>在搭建了Netflix解锁服务的vps上执行命令。首先一棍子打死，所有外部ip都不允许访问本vps的53端口。</p>
+<pre><code class="language-bash">iptables -I INPUT -p tcp --dport 53 -j DROP
 </code></pre>
-<h1 id="5-卸载">5. 卸载</h1>
-<p>使用 root 用户登录，运行以下命令：</p>
-<pre><code class="language-bash">./shadowsocksR.sh uninstall
-</code></pre>
+<p>现在我们如果要授权168.10.1.1使用，执行如下命令：</p>
+<p>iptables -I INPUT -s 168.10.1.1 -p tcp --dport 53 -j ACCEPT<br>
+还有其他ip，依据上面照猫画虎，修改ip后执行就行了。上面的设置都是临时，如果重启了这台vps就会重置规则，我们需要保存一下iptables已获得永久修改。</p>
+<p>service iptables save<br>
+如果提示iptables服务不存在，原因是在新版linux系统里，iptables已经不作为一项独立的服务运行，可以使用iptables-save命令保存。</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li><a href="#1-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">1. 准备工作</a></li>
-<li><a href="#2-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85">2. 一键安装</a></li>
-<li><a href="#3-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">3. 常用命令</a></li>
-<li><a href="#4-%E5%A4%9A%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B">4. 多用户配置示例</a></li>
-<li><a href="#5-%E5%8D%B8%E8%BD%BD">5. 卸载</a></li>
+<li><a href="#netflix%E6%98%AF%E4%BB%80%E4%B9%88">Netflix是什么？</a></li>
 </ul>
 
               </div>

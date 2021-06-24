@@ -1,0 +1,267 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cloudflare WARP 搭配 SNIProxy+DNSmasq 解锁 Netflix 等流媒体 | 荔枝气泡</title>
+<link rel="shortcut icon" href="https://nazocthun.github.io/favicon.ico?v=1624574568152">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://nazocthun.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Cloudflare WARP 搭配 SNIProxy+DNSmasq 解锁 Netflix 等流媒体 | 荔枝气泡 - Atom Feed" href="https://nazocthun.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1. Netflix 是什么？
+Netflix 是一家优质的视频服务商，与国内腾讯视频、爱奇艺类似。但与之不同的是， Netflix 并无免费内容，所有在 Netflix 上的电影、剧集等，都需要付费购买会员才可以观看。并且 Netflix..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://nazocthun.github.io">
+  <img class="avatar" src="https://nazocthun.github.io/images/avatar.png?v=1624574568152" alt="">
+  </a>
+  <h1 class="site-title">
+    荔枝气泡
+  </h1>
+  <p class="site-description">
+    <b>nazocthun，不是肥宅</b>
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/nazocthun" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Cloudflare WARP 搭配 SNIProxy+DNSmasq 解锁 Netflix 等流媒体
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-05-28
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="1-netflix-是什么">1. Netflix 是什么？</h1>
+<p>Netflix 是一家优质的视频服务商，与国内腾讯视频、爱奇艺类似。但与之不同的是， Netflix 并无免费内容，所有在 Netflix 上的电影、剧集等，都需要付费购买会员才可以观看。并且 Netflix 自制剧（类似爱奇艺自制的网剧）几乎都是神剧，评分爆炸。目前越来越多的用户开始接触并选择观看 Netflix 。更多内容可以移步我的<a href="https://nazocthun.github.io/post/netflix-guan-ying-zhi-nan/">另一篇博文</a></p>
+<h1 id="2-解锁-netflix-的理由">2. 解锁 Netflix 的理由</h1>
+<p>1、现在可看 Netflix 的 IP 越来越少，也越来越珍贵。只要你有一台 VPS 可以看 Netflix ，解锁后相当于你有无数台可看 Netflix 的 VPS 。</p>
+<p>2、一般找小的服务商，他们手里的 IP 很大概率可以看 Netflix ，小服务商的价格也比较低，不过线路往往不好。你只要再购买一台线路好的服务器就可以提高播放速度。</p>
+<p>3、国内并没有屏蔽 Netflix ，只是 Netflix 单方面限制了国内地区观看。你只需要将本地 DNS 修改为你搭建了 Netflix 解锁服务的 IP ，就可以直接观看 Netflix ，不需要额外代理。</p>
+<h1 id="3-原理">3. 原理</h1>
+<p>通过软件程序，将不能看 Netflix 的服务器流量转发到可以看 Netflix 的服务器上，然后再将结果转发到不能看 Netflix 的服务器上，最后再将结果转发到你的设备上，完成解锁 Netflix 的过程。使用的软件有 DNSmasq/iptables/firewalld/brook 等。</p>
+<h1 id="4-ipv6解锁">4. IPv6解锁</h1>
+<p>Netflix屏蔽了很多 IPv4 段，但是 IPv6 很少屏蔽，一是 IPv6 用的人还很少，而且 IPv6 地址很多，总有漏网之鱼。</p>
+<p>如果你恰好有一台有 IPv6 地址的服务器，可以试试下面的方法：</p>
+<p>如果你用 ss ，在配置文件修改server字段，可以同时支持 IPv4 和 IPv6</p>
+<pre><code class="language-json">&quot;server&quot;:&quot;::&quot;,
+</code></pre>
+<p>如果你是 ssr ，修改配置文件 dns_ipv6 字段为 true ，让 IPv6 优先</p>
+<pre><code class="language-json">dns_ipv6&quot;: true,
+</code></pre>
+<p>然后重启 SS/SSR 即可，默认情况下连接 Netflix 使用的就是 IPv6 。此方法不能保证一定可以看 Netflix 。（如今 SS 系列协议可能安全性不足，慎用）</p>
+<h1 id="5-通过-cloudflare-warp-获取-ipv6-地址">5. 通过 Cloudflare WARP 获取 IPv6 地址</h1>
+<p>WARP 是 Cloud­flare 提供的一项基于 Wire­Guard 的网络流量安全及加速服务，能够让你通过连接到 Cloud­flare 的边缘节点实现隐私保护及链路优化。其连接入口为双栈 (IPv4/​IPv6)，因此单栈服务器可以连接到 WARP 来获取额外的网络连通性支持。</p>
+<p>比如可以让仅具有 IPv6 的服务器直接访问 IPv4 网络，不再局限于 DNS64 的束缚，能自定义任意 DNS 解析服务器，会有很大的帮助；也能让仅具有 IPv4 的服务器获得 IPv6 网络的访问能力，可以作为 IPv6 Only VPS 的 SSH 跳板。另外通过 WARP 网络可以实现解锁 Net­flix 、绕过 Google 验证码等骚操作。</p>
+<p>WARP 并不提供公网 IP 地址，而是以 NAT 的方式去访问外部网络。此外 Cloud­Flare WARP 的网络质量目前要比 HE 好非常多的。</p>
+<p>如果你的 VPS 服务商不提供 IPv6 地址，你可以用 Cloudflare 提供的 WARP 服务来获取一个 IPv6地址。</p>
+<h2 id="51-一键安装">5.1 一键安装</h2>
+<p>一键安装脚本（来源于 GitHub <a href="https://github.com/missuo/CloudflareWarp">missuo/CloudflareWarp</a>）</p>
+<pre><code class="language-bash">wget -O warp.sh https://raw.githubusercontent.com/missuo/CloudflareWarp/main/warp.sh &amp;&amp; bash warp.sh
+</code></pre>
+<h2 id="52-内核版本处理">5.2 内核版本处理</h2>
+<p>需要注意的是，内核必须为 &gt;= 5.X，需要安装最新版的BBR加速内核。</p>
+<pre><code class="language-bash">yum install wget
+wget -N --no-check-certificate &quot;https://github.000060000.xyz/tcp.sh&quot; &amp;&amp; chmod +x tcp.sh &amp;&amp; ./tcp.sh
+</code></pre>
+<h2 id="53-流媒体检测">5.3 流媒体检测</h2>
+<p>在使用了 WARP 之后，你的 VPS 应该会增加一个 IPv6 地址，并且这个地址大概率是可以观看 Netflix 的，可以使用下面的脚本检测：</p>
+<p>检测各种流媒体脚本（来源于 GitHub <a href="https://github.com/lmc999/RegionRestrictionCheck">lmc999/RegionRestrictionCheck</a>）</p>
+<pre><code class="language-bash">bash &lt;(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
+</code></pre>
+<h1 id="6-安装snidnsmasq">6. 安装SNI+DNSmasq</h1>
+<h2 id="61-一键安装">6.1 一键安装</h2>
+<p>一键安装脚本（来源于 GitHub <a href="https://github.com/myxuchangbin/dnsmasq_sniproxy_install">myxuchangbin/dnsmasq_sniproxy_install</a>）<br>
+其中包含了主流流媒体配置</p>
+<h3 id="611-安装">6.1.1 安装</h3>
+<pre><code class="language-bash">wget --no-check-certificate -O dnsmasq\_sniproxy.sh https://raw.githubusercontent.com/myxuchangbin/dnsmasq\_sniproxy\_install/master/dnsmasq\_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -i
+</code></pre>
+<h3 id="612-卸载">6.1.2 卸载</h3>
+<pre><code class="language-bash">wget --no-check-certificate -O dnsmasq\_sniproxy.sh https://raw.githubusercontent.com/myxuchangbin/dnsmasq\_sniproxy\_install/master/dnsmasq\_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -u
+</code></pre>
+<h2 id="62-我的修改版一键安装">6.2 我的修改版一键安装</h2>
+<p>其中添加了 Twitter，YouTube的配置，并且默认配置好 IPv6 优先。</p>
+<h3 id="621-安装">6.2.1 安装</h3>
+<pre><code class="language-bash">wget --no-check-certificate -O dnsmasq_sniproxy.sh https://raw.githubusercontent.com/nazocthun/dnsmasq_sniproxy_install/master/dnsmasq_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -i
+</code></pre>
+<h3 id="622-卸载">6.2.2 卸载</h3>
+<pre><code class="language-bash">wget --no-check-certificate -O dnsmasq_sniproxy.sh https://raw.githubusercontent.com/nazocthun/dnsmasq_sniproxy_install/master/dnsmasq_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -u
+</code></pre>
+<h2 id="62-限制ip使用">6.2 限制ip使用</h2>
+<p>此方法不同 Netflix-proxy ，可以登录网页手动绑定 IP ，如果你搭建 Netflix 解锁服务的 VPS 的 IP 被别人知道，他们也可以不经过你的同意直接使用，所以限制 IP 是很有必要的。</p>
+<p>在搭建了 Netflix 解锁服务的 VPS 上执行命令。<br>
+首先一棍子打死，所有外部 IP 都不允许访问本 VPS 的 53 端口。</p>
+<pre><code class="language-bash">iptables -I INPUT -p tcp --dport 53 -j DROP
+</code></pre>
+<p>现在我们如果要授权168.10.1.1使用，执行如下命令：<br>
+添加 IP</p>
+<pre><code class="language-bash">iptables -I INPUT -s 168.10.1.1 -p tcp --dport 53 -j ACCEPT
+</code></pre>
+<p>还有其他 IP ，依据上面照猫画虎，修改 IP 后执行就行了。上面的设置都是临时，如果重启了这台 VPS 就会重置规则，我们需要保存一下 iptables 已获得永久修改。</p>
+<pre><code class="language-bash">service iptables save
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#1-netflix-%E6%98%AF%E4%BB%80%E4%B9%88">1. Netflix 是什么？</a></li>
+<li><a href="#2-%E8%A7%A3%E9%94%81-netflix-%E7%9A%84%E7%90%86%E7%94%B1">2. 解锁 Netflix 的理由</a></li>
+<li><a href="#3-%E5%8E%9F%E7%90%86">3. 原理</a></li>
+<li><a href="#4-ipv6%E8%A7%A3%E9%94%81">4. IPv6解锁</a></li>
+<li><a href="#5-%E9%80%9A%E8%BF%87-cloudflare-warp-%E8%8E%B7%E5%8F%96-ipv6-%E5%9C%B0%E5%9D%80">5. 通过 Cloudflare WARP 获取 IPv6 地址</a>
+<ul>
+<li><a href="#51-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85">5.1 一键安装</a></li>
+<li><a href="#52-%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC%E5%A4%84%E7%90%86">5.2 内核版本处理</a></li>
+<li><a href="#53-%E6%B5%81%E5%AA%92%E4%BD%93%E6%A3%80%E6%B5%8B">5.3 流媒体检测</a></li>
+</ul>
+</li>
+<li><a href="#6-%E5%AE%89%E8%A3%85snidnsmasq">6. 安装SNI+DNSmasq</a>
+<ul>
+<li><a href="#61-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85">6.1 一键安装</a>
+<ul>
+<li><a href="#611-%E5%AE%89%E8%A3%85">6.1.1 安装</a></li>
+<li><a href="#612-%E5%8D%B8%E8%BD%BD">6.1.2 卸载</a></li>
+</ul>
+</li>
+<li><a href="#62-%E6%88%91%E7%9A%84%E4%BF%AE%E6%94%B9%E7%89%88%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85">6.2 我的修改版一键安装</a>
+<ul>
+<li><a href="#621-%E5%AE%89%E8%A3%85">6.2.1 安装</a></li>
+<li><a href="#622-%E5%8D%B8%E8%BD%BD">6.2.2 卸载</a></li>
+</ul>
+</li>
+<li><a href="#62-%E9%99%90%E5%88%B6ip%E4%BD%BF%E7%94%A8">6.2 限制ip使用</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://nazocthun.github.io/post/netflix-guan-ying-zhi-nan/">
+              <h3 class="post-title">
+                Netflix观影指南
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://nazocthun.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

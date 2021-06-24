@@ -1,0 +1,256 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>利用闲置服务器的CPU算力挖掘门罗币 | 荔枝气泡</title>
+<link rel="shortcut icon" href="https://nazocthun.github.io/favicon.ico?v=1624574568152">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://nazocthun.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="利用闲置服务器的CPU算力挖掘门罗币 | 荔枝气泡 - Atom Feed" href="https://nazocthun.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1, 矿池与钱包的选择
+挖掘虚拟币是不能单干的。我们需要在矿池中挖矿。
+门罗币（Monero, XMR）的矿池有很多，比较著名的有supportxmr.com, hashvault.pro, xmr.nanopool.org, 等等。每个矿..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://nazocthun.github.io">
+  <img class="avatar" src="https://nazocthun.github.io/images/avatar.png?v=1624574568152" alt="">
+  </a>
+  <h1 class="site-title">
+    荔枝气泡
+  </h1>
+  <p class="site-description">
+    <b>nazocthun，不是肥宅</b>
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/nazocthun" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              利用闲置服务器的CPU算力挖掘门罗币
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-05-31
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>1, 矿池与钱包的选择<br>
+挖掘虚拟币是不能单干的。我们需要在矿池中挖矿。</p>
+<p>门罗币（Monero, XMR）的矿池有很多，比较著名的有supportxmr.com, hashvault.pro, xmr.nanopool.org, 等等。每个矿池的挖矿效率都略有差异，您可以自行研究。本文将以xmr.nanopool.org为例。其他矿池的使用方法没有什么差别。</p>
+<p>选择好矿池之后，您还需要有一个门罗币钱包。您可以选择门罗币本地钱包，直接访问getmonero.org然后下载安装软件即可获得。您也可以在任何一个虚拟货币交易所（比如币安，火币，等等）注册一个账户，然后也可以获得门罗币钱包地址。</p>
+<p>请您记录下您的矿池地址和钱包地址，等会儿在使用矿机挖矿的时候需要用到这些参数。</p>
+<p>2, 编译安装矿机<br>
+本文将介绍xmrig矿机的安装和使用。xmrig是一款多平台开源矿机程序，由C++/C/汇编语言编写，性能优异，不仅能用于多平台，还可以支持多算法，大多数基于Cryptonight的虚拟币都可以用它来挖掘。</p>
+<p>首先，我们需要下载xmrig源文件。您可以到其github页面下载最新版发行包 (https://github.com/xmrig/xmrig/releases)。</p>
+<p>1<br>
+2<br>
+3<br>
+wget https://github.com/xmrig/xmrig/archive/v6.2.2.tar.gz<br>
+tar zxvf v6.2.2.tar.gz<br>
+cd xmrig-6.2.2<br>
+然后，我们分平台，介绍xmrig矿机的编译安装。</p>
+<p>(1) CentOS</p>
+<p>1<br>
+2<br>
+3<br>
+4<br>
+5<br>
+yum install -y epel-release<br>
+yum install -y git make cmake gcc gcc-c++ libstdc++-static libuv-static hwloc-devel openssl-devel<br>
+mkdir build &amp;&amp; cd build<br>
+cmake .. -DUV_LIBRARY=/usr/lib64/libuv.a<br>
+make<br>
+(2) Ubuntu</p>
+<p>1<br>
+2<br>
+3<br>
+4<br>
+apt-get install git build-essential cmake libuv1-dev libssl-dev libhwloc-dev<br>
+mkdir build &amp;&amp; cd build<br>
+cmake ..<br>
+make<br>
+(3) Fedora</p>
+<p>1<br>
+2<br>
+3<br>
+4<br>
+dnf install -y git cmake gcc gcc-c++ libuv-static libstdc++-static libmicrohttpd-devel<br>
+mkdir build &amp;&amp; cd build<br>
+cmake .. -DCMAKE_BUILD_TYPE=Release -DUV_LIBRARY=/usr/lib64/libuv.a<br>
+make<br>
+(4) FreeBSD</p>
+<p>1<br>
+2<br>
+3<br>
+4<br>
+5<br>
+pkg install git clang38 cmake libuv libmicrohttpd<br>
+mkdir build<br>
+cd build<br>
+cmake ..<br>
+make<br>
+(5) Windows</p>
+<p>您需要安装Visual Studio 2017 (https://visualstudio.microsoft.com/vs/older-downloads/)</p>
+<p>安装完毕后，在cmd中进入xmrig源文件目录，然后执行：</p>
+<p>1<br>
+2<br>
+3<br>
+mkdir build<br>
+cd build<br>
+cmake .. -G &quot;Visual Studio 15 2017 Win64&quot; -DXMRIG_DEPS=c:\xmrig-deps\msvc2017\x64</p>
+<p>3, 配置矿机参数<br>
+Xmrig可以帮我们自动优化并设置好矿机的线程设置参数，因此我们无需像以前的xmr-stak那样，手动设置线程。我们只需要配置好矿池等参数即可。</p>
+<p>配置参数很简单，我们可以使用这个xmrig参数配置小助手：https://xmrig.com/wizard</p>
+<p>打开页面后，点击左上角Add pool, 添加一个矿池。</p>
+<p>由于我们使用的Nanopool不在备选矿池之内，这里需要选择Custom pool, 手动输入矿池信息，如下图。</p>
+<p>请注意，如果您打算挖门罗币(Monero)，那么这里的算法需要选rx/0.  老版本的Cryptonight算法已经无法挖掘新的门罗币了。输入完毕后，点击蓝色的Add pool，进入下一步。</p>
+<p>在Backends选项卡中，我们需要设置挖矿的算力来源。理论上，我们可以使用CPU和GPU（包括AMD OpenCL和NVIDIA CUDA）挖矿。然而，如果您的服务器上有闲置的显卡，我建议您可以考虑去挖以太币(ETH)而不是门罗币(XMR)，因为GPU挖以太币的收益比挖门罗币的收益高得多。因此，这里我们只选择CPU.</p>
+<p>接下来我们可以设置一些其他的设定。</p>
+<p>首先是捐赠比例，即将挖到的门罗币的一定比例捐助给矿机的开发者。这里我们设置为1%.</p>
+<p>下面一个选项是HTTP API.  如果开启之后，会在服务器上额外启用一个轻量的HTTP服务器，可以使用外部API调用的方式监测矿机状态。如果您只有一两台矿机，那么没什么必要开启这个功能，毕竟我们在服务器上就可以看到矿机的状态了。如果您有很多太矿机，那就可以开启这个功能，这样您可以使用一个面板来管理所有的矿机。您可以自己编程调用API, 也可以使用这个现成的客户端(http://workers.xmrig.info/)来调用API.  我们这里的示例中就不开启了。</p>
+<p>全部设置完毕后，就可以看到系统生成的配置参数了。我们复制下面那个一行的命令即可。</p>
+<p>4, 开始挖矿<br>
+如果您使用的是Windows, 直接在cmd中执行刚刚生成的命令即可。</p>
+<p>如果您使用的是SSH登录的Linux服务器, 那么我建议您可以安装screen, 这样就不需要一直开着SSH了。</p>
+<p>Ubuntu/Debian:</p>
+<p>1<br>
+apt-get install screen<br>
+CentOS:</p>
+<p>1<br>
+yum install screen<br>
+然后，新建一个screen session:</p>
+<p>1<br>
+screen -S xmrig<br>
+进入刚刚编译安装好的xmrig矿机build目录中，执行我们在上一节生成的矿机命令即可</p>
+<p>1<br>
+./xmrig --donate-level 1 -o xmr-us-west1.nanopool.org:14444 -u 44b7HLhXJ6YGe6KSRGHcMJBEGH6wTxaChLgQTgZMhXnHSxpDpbu5JyXMBixRUpiRc96zYbgKb6NvhhLikvQTMMXeNY4yusd -k --coin monero -a rx/0<br>
+如果没有配置上的错误，就可以看到类似于下面的输出。</p>
+<p>在挖矿界面，按下键盘上的h键，会显示当前的算力；按下p键会暂停挖矿；按下r键会继续开始挖矿。</p>
+<p>开始挖矿之后，按下键盘上的Ctrl + A + D键，即可退出该Screen Session.  矿机将在后台继续运行。</p>
+<p>这样，我们就安装好了xmrig矿机，可以挖掘Monero了。如果您有任何疑问，欢迎在这里留言。再次重申，请不要在VPS上挖矿，只能在独立服务器上挖矿，否则您会被主机商清退。</p>
+<p>本文作者为香菇肥牛，原文链接为https://qing.su/article/monero-mining-guide-2020-version.html</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://nazocthun.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
